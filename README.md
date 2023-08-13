@@ -1,1 +1,1 @@
-# -magic-mirror-frontend
+# magic-mirror-frontend
