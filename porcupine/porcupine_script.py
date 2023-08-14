@@ -5,6 +5,8 @@ import numpy as np
 import time
 import whisper
 from pydub import AudioSegment
+import requests
+
 
 """
 Note: This code uses the pydub library to convert the WAV recording to MP3. 
@@ -13,11 +15,6 @@ You can install pydub using `pip install pydub`, and you can usually
 install FFmpeg through your system's package manager -> brew install ffmpeg
 Make sure to adjust the SILENCE_THRESHOLD to match the level that 
 you consider to be silence for your environment and microphone.
-+ Need for pip install whisper
-+ brew install portaudio
-+ pip3 install pyaudio
-+ pip3 install pvporcupine
-+ pip3 install pydub
 """
 
 # Constants
@@ -55,6 +52,12 @@ def get_next_audio_frame():
     audio_buffer = stream.read(porcupine.frame_length, exception_on_overflow=False)
     audio_data = np.frombuffer(audio_buffer, dtype=np.int16)
     return audio_data
+
+
+def write_response_file(response: str) -> None:
+    with open("chatbot_responses/response.txt", "w") as outputfile:
+        outputfile.write(response)
+
 
 while True:
   audio_frame = get_next_audio_frame()
@@ -97,9 +100,22 @@ while True:
               file_path_transcript = '/Users/larsnet/magic-mirror-frontend/porcupine/transcripts/transcript.txt' # --> change
               with open(file_path_transcript, 'w') as file:
                   file.write(transcription)
-      
+            
+              # Call of LLM API
+              HOST_IP = "127.0.0.1"
+              PORT = 8000
+              USER_INPUT = transcription # Using the transcription as user input
+              payload = {'user_input': f'{USER_INPUT}'}
+              r = requests.get(f'http://{HOST_IP}:{PORT}/chatbot', params=payload)
+              data = r.json()
+              response_string = data['chatbot_response']['text']
+              print(response_string)
+              write_response_file(response_string) # Writing the response to a file
+
       else:
           silence_start_time = None
+
+
 
 # Clean up
 porcupine.delete()
