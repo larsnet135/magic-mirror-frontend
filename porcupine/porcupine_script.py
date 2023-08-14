@@ -3,15 +3,21 @@ import pyaudio
 import wave
 import numpy as np
 import time
+import whisper
 from pydub import AudioSegment
 
 """
 Note: This code uses the pydub library to convert the WAV recording to MP3. 
 You'll need to install it and have FFmpeg available in your system. 
 You can install pydub using `pip install pydub`, and you can usually 
-install FFmpeg through your system's package manager. 
+install FFmpeg through your system's package manager -> brew install ffmpeg
 Make sure to adjust the SILENCE_THRESHOLD to match the level that 
 you consider to be silence for your environment and microphone.
++ Need for pip install whisper
++ brew install portaudio
++ pip3 install pyaudio
++ pip3 install pvporcupine
++ pip3 install pydub
 """
 
 # Constants
@@ -25,8 +31,8 @@ audio_frames = []
 
 # Create porcupine object
 porcupine = pvporcupine.create(
-  access_key='****', # --> change
-  keyword_paths=['****'] # --> change
+  access_key='2/2V5+k37vGePDtulTsGJYDQTgk8F/oUx5dLDNlfju+NOcRsIHCGqw==', # --> change
+  keyword_paths=['/Users/larsnet/magic-mirror-frontend/porcupine/Keywords/mac/porcupine_mac.ppn'] # --> change
 )
 
 # Create a PyAudio object
@@ -41,6 +47,10 @@ stream = audio_engine.open(
     input=True,
     frames_per_buffer=porcupine.frame_length)  # This sets the frames_per_buffer to 512, matching Porcupine's expectation
 
+# Create a Whisper model
+whisper_model = whisper.load_model("tiny")
+
+# Main Function
 def get_next_audio_frame():
     audio_buffer = stream.read(porcupine.frame_length, exception_on_overflow=False)
     audio_data = np.frombuffer(audio_buffer, dtype=np.int16)
@@ -77,9 +87,17 @@ while True:
 
               # Convert to MP3
               audio = AudioSegment.from_wav(wav_path)
-              mp3_path = '****' # --> change
+              mp3_path = '/Users/larsnet/magic-mirror-frontend/porcupine/mp3_files/audio.mp3' # --> change
               audio.export(mp3_path, format='mp3')
               print(f"Saved recording as {mp3_path}")
+
+              # Transcribe the recording using Whisper
+              result = whisper_model.transcribe(mp3_path)
+              transcription = result["text"]
+              file_path_transcript = '/Users/larsnet/magic-mirror-frontend/porcupine/transcripts/transcript.txt' # --> change
+              with open(file_path_transcript, 'w') as file:
+                  file.write(transcription)
+      
       else:
           silence_start_time = None
 
