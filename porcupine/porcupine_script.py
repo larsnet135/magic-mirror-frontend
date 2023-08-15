@@ -6,16 +6,8 @@ import time
 import whisper
 from pydub import AudioSegment
 import requests
+import subprocess
 
-
-"""
-Note: This code uses the pydub library to convert the WAV recording to MP3. 
-You'll need to install it and have FFmpeg available in your system. 
-You can install pydub using `pip install pydub`, and you can usually 
-install FFmpeg through your system's package manager -> brew install ffmpeg
-Make sure to adjust the SILENCE_THRESHOLD to match the level that 
-you consider to be silence for your environment and microphone.
-"""
 
 # Constants
 SILENCE_THRESHOLD = 1000 # You may need to adjust this threshold
@@ -111,6 +103,14 @@ while True:
               response_string = data['chatbot_response']['text']
               print(response_string)
               write_response_file(response_string) # Writing the response to a file
+
+              # Use of mimic3 for text-to-speech
+              def text_to_speech_mimic(text):
+                cmd = ["mimic", "-t", text, "-o", "response.wav"]
+                subprocess.run(cmd)
+
+              text_to_speech_mimic(response_string_chatbot)
+              subprocess.run(["aplay", "response.wav"])
 
       else:
           silence_start_time = None
