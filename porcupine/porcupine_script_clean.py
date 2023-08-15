@@ -195,7 +195,10 @@ def main_loop(porcupine, audio_engine, stream, whisper_model):
                     text_to_speech_mimic(response_string)
             else:
                 silence_start_time = None
-
+        
+        if not recording:
+            print("Ready for the next command...")  
+            continue 
 
 def cleanup(porcupine, stream, audio_engine):
     """
