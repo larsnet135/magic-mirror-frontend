@@ -1,12 +1,13 @@
-import pvporcupine
-import pyaudio
-import wave
-import numpy as np
-import time
-import whisper
-from pydub import AudioSegment
-import requests
-import subprocess
+import pvporcupine       # Porcupine wake word detection
+import pyaudio           # Audio recording and stream management
+import wave              # WAV file reading and writing
+import numpy as np       # Audio data array manipulation
+import time              # Silence duration calculation
+import whisper           # Whisper ASR model for transcription
+from pydub import AudioSegment   # Audio file format conversion (WAV to MP3)
+import requests          # Making an HTTP request to the LLM API
+import subprocess       # mimic3 for text-to-speech conversion and playing the audio response
+
 
 
 # Constants
