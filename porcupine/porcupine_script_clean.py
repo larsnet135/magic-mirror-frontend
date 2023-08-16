@@ -1,3 +1,5 @@
+#!/home/magic/Projects/magic-mirror-frontend/porcupine/.venv/bin/python
+
 import pvporcupine       # Porcupine wake word detection
 import pyaudio           # Audio recording and stream management
 import wave              # WAV file reading and writing
