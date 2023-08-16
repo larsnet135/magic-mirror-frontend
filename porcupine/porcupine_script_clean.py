@@ -144,7 +144,7 @@ def get_response_from_api(transcription):
     return data['chatbot_response']['text']
 
 
-def text_to_speech_mimic(text):
+def text_to_speech_mimic(text): #---> not in use temporarilly
     """
     Convert text to speech using the mimic3 tool and play the generated audio response.
     """
