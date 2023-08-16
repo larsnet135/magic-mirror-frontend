@@ -8,7 +8,7 @@ import time              # Silence duration calculation
 import whisper           # Whisper ASR model for transcription
 from pydub import AudioSegment   # Audio file format conversion (WAV to MP3)
 import requests          # Making an HTTP request to the LLM API
-import subprocess       # mimic3 for text-to-speech conversion and playing the audio response
+#import subprocess       # mimic3 for text-to-speech conversion and playing the audio response
 
 
 
@@ -194,13 +194,14 @@ def main_loop(porcupine, audio_engine, stream, whisper_model):
                     response_string = get_response_from_api(transcription)
                     print(response_string)
 
-                    text_to_speech_mimic(response_string)
+                    #text_to_speech_mimic(response_string) ---> on hold temporarilly 
             else:
                 silence_start_time = None
         
-        if not recording:
-            print("Ready for the next command...")  
-            continue 
+        # if not recording: ---> I think this is making everythin worse, maybe useful if changed
+        #     print("Ready for the next command...")  
+        #     continue 
+
 
 def cleanup(porcupine, stream, audio_engine):
     """

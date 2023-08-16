@@ -1,3 +1,6 @@
+!/home/magic/Projects/magic-mirror-frontend/porcupine/.venv/bin/python
+
+
 import time
 
 def main():
